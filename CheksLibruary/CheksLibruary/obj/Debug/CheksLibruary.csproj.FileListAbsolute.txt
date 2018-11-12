@@ -1,0 +1,12 @@
+C:\C#\Project\ProjectChess\CheksLibruary\CheksLibruary\bin\Debug\CheksLibruary.dll
+C:\C#\Project\ProjectChess\CheksLibruary\CheksLibruary\bin\Debug\CheksLibruary.pdb
+C:\C#\Project\ProjectChess\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csprojResolveAssemblyReference.cache
+C:\C#\Project\ProjectChess\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csproj.CoreCompileInputs.cache
+C:\C#\Project\ProjectChess\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.dll
+C:\C#\Project\ProjectChess\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.pdb
+C:\C#\RealProject\CheksLibruary\CheksLibruary\bin\Debug\CheksLibruary.dll
+C:\C#\RealProject\CheksLibruary\CheksLibruary\bin\Debug\CheksLibruary.pdb
+C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csprojResolveAssemblyReference.cache
+C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csproj.CoreCompileInputs.cache
+C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.dll
+C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.pdb
