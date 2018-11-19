@@ -13,13 +13,21 @@ namespace WindowsFormsApp
 {
     public partial class Form1 : Form
     {
+        private delegate void NoElemsFunc();
+        private delegate void OneElemFunc(int s);
+        private event OneElemFunc GiveRezult;
+        private event NoElemsFunc ChangeColourWhite;
+        private event NoElemsFunc ReturnColourWhite;
+        private event NoElemsFunc ChangeColourBlack;
+        private event NoElemsFunc ReturnColourBlack;
+        private event NoElemsFunc ChangeButtonImmage;
         Dictionary<int, Button> buttons;
         Dictionary<Button, int> number;
         bool _isCliced;
         List<int> variants;
         ChessArr chessArr;
         int _pozold;
-        int WhoWin;//0-никто, 1-белые, 2-черные
+        int _isColour;//0-белые,1-черные
 
         public Form1()
         {
@@ -28,6 +36,13 @@ namespace WindowsFormsApp
             variants = new List<int>();
             buttons = new Dictionary<int, Button>();
             number = new Dictionary<Button, int>();
+            _isColour = 0;
+            ChangeColourWhite += ChangeColourW;
+            ReturnColourWhite += ReturnColourW;
+            ChangeColourBlack += ChangeColourB;
+            ReturnColourBlack += ReturnColourB;
+            ChangeButtonImmage += ChangeImmage;
+            GiveRezult += TryKnowWinner;
             chessArr = new ChessArr();
             buttons.Add(11, button11);
             buttons.Add(12, button12);
@@ -174,125 +189,226 @@ namespace WindowsFormsApp
             number.Add(button88, 88);
         }
 
+        private void Form1_GiveRezult(int s)
+        {
+            throw new NotImplementedException();
+        }
+
         private void button_Click(object sender, EventArgs e)
         {
-            int _poz = number[((Button)sender)];
-            int a = _poz / 10;
-            int b = _poz % 10;
-            if (_isCliced == false)
+            if (_isColour == 0)
             {
-                var list = new List<int>();
-                _pozold = _poz;
-                list = chessArr.GetInfo(a, b);
-                if (list != null)
+                int _poz = number[((Button)sender)];
+                int a = _poz / 10;
+                int b = _poz % 10;
+                if (_isCliced == false)
                 {
-                    variants = list;
-                    _isCliced = true;
-                    for (int i = 0; i < variants.Count; i++)
+                    var list = new List<int>();
+                    _pozold = _poz;
+                    list = chessArr.GetInfo(a, b);
+                    if (list != null)
                     {
-                        if (buttons[variants[i]].BackColor == Color.SaddleBrown)
-                        {
-                            buttons[variants[i]].BackColor = Color.Chocolate;
-                        }
-                        else if (buttons[variants[i]].BackColor == Color.Peru)
-                        {
-                            buttons[variants[i]].BackColor = Color.PeachPuff;
-                        }
+                        variants = list;
+                        _isCliced = true;
+                        ChangeColourWhite();
+                    }
+                    else
+                    {
+                        variants.Clear();
                     }
                 }
-                else
+                else if ((_isCliced == true) && (!variants.Contains(_poz)))
                 {
+                    var list = new List<int>();
+                    list = chessArr.GetInfo(a, b);
+                    ReturnColourWhite();
                     variants.Clear();
-                }
-            }
-            else if ((_isCliced == true) && (!variants.Contains(_poz)))
-            {
-                var list = new List<int>();
-                list = chessArr.GetInfo(a, b);
-                for (int i = 0; i < variants.Count; i++)
-                {
-                    if (buttons[variants[i]].BackColor == Color.Chocolate)
+                    _pozold = _poz;
+                    if (list != null)
                     {
-                        buttons[variants[i]].BackColor = Color.SaddleBrown;
+                        variants = list;
+                        _isCliced = true;
+                        ChangeColourWhite();
                     }
-                    else if (buttons[variants[i]].BackColor == Color.PeachPuff)
+                    else
                     {
-                        buttons[variants[i]].BackColor = Color.Peru;
-                    }
-                }
-                variants.Clear();
-                _pozold = _poz;
-                if (list != null)
-                {
-                    variants = list;
-                    _isCliced = true;
-                    for (int i = 0; i < variants.Count; i++)
-                    {
-                        if (buttons[variants[i]].BackColor == Color.SaddleBrown)
-                        {
-                            buttons[variants[i]].BackColor = Color.Chocolate;
-                        }
-                        else if (buttons[variants[i]].BackColor == Color.Peru)
-                        {
-                            buttons[variants[i]].BackColor = Color.PeachPuff;
-                        }
+                        _isCliced = false;
+                        variants.Clear();
                     }
                 }
                 else
                 {
                     _isCliced = false;
+                    ReturnColourWhite();
+                    int sost=0;
+                    chessArr.ChangePozition(_pozold / 10, _pozold % 10, a, b, ref sost);
+                    buttons[_poz].BackgroundImage = buttons[_pozold].BackgroundImage;
+                    buttons[_pozold].BackgroundImage = null;
                     variants.Clear();
+                    GiveRezult(sost);
+                    _isColour = 1;
+                    label1.Text = "Ход черных";
+                    ChangeButtonImmage();
                 }
             }
             else
             {
-                _isCliced = false;
-                for (int i = 0; i < variants.Count; i++)
+                int _poz = number[((Button)sender)];
+                int a = 9-_poz / 10;
+                int b = 9-_poz % 10;
+                _poz = a * 10 + b;
+                if (_isCliced == false)
                 {
-                    if (buttons[variants[i]].BackColor == Color.Chocolate)
+                    var list = new List<int>();
+                    _pozold = _poz;
+                    list = chessArr.GetInfo(a, b);
+                    if (list != null)
                     {
-                        buttons[variants[i]].BackColor = Color.SaddleBrown;
+                        variants = list;
+                        _isCliced = true;
+                        ChangeColourBlack();
                     }
-                    else if (buttons[variants[i]].BackColor == Color.PeachPuff)
+                    else
                     {
-                        buttons[variants[i]].BackColor = Color.Peru;
+                        variants.Clear();
                     }
                 }
-                int sost;
-                chessArr.ChangePozition(_pozold / 10, _pozold % 10, a, b,out sost);
-                buttons[_poz].BackgroundImage = buttons[_pozold].BackgroundImage;
-                buttons[_pozold].BackgroundImage = null;
-                variants.Clear();
-                if (sost == 1)
+                else if ((_isCliced == true) && (!variants.Contains(_poz)))
                 {
-                    label1.Text = "Ход черных";
+                    var list = new List<int>();
+                    list = chessArr.GetInfo(a, b);
+                    ReturnColourBlack();
+                    variants.Clear();
+                    _pozold = _poz;
+                    if (list != null)
+                    {
+                        variants = list;
+                        _isCliced = true;
+                        ChangeColourBlack();
+                    }
+                    else
+                     {
+                         _isCliced = false;
+                         variants.Clear();
+                     }
                 }
-                else if (sost == 0)
+                else
                 {
+                    _isCliced = false;
+                    ReturnColourBlack();
+                    int sost=0;
+                    chessArr.ChangePozition(_pozold / 10, _pozold % 10, a, b,ref sost);
+                    int m = 9 - _poz/10;
+                    int n = 9 - _poz % 10;
+                    int f = 9 - _pozold / 10;
+                    int g = 9 - _pozold % 10;
+                    buttons[m*10+n].BackgroundImage = buttons[f*10+g].BackgroundImage;
+                    buttons[f * 10 + g].BackgroundImage = null;
+                    variants.Clear();
+                    GiveRezult(sost);
+                    _isColour = 0;
                     label1.Text = "Ход белых";
-                }
-                else if (sost==3)
-                {
-                    DialogResult result = MessageBox.Show("Черные выйграли. Сыграть заного?","", MessageBoxButtons.RetryCancel);
-                    if (result == DialogResult.Retry)
-                    {
-                        Application.Restart();
-                    }
-                    else
-                        Application.Exit();
-                }
-                else if (sost == 4)
-                {
-                    DialogResult result = MessageBox.Show("Белые выйграли. Сыграть заного?", "", MessageBoxButtons.RetryCancel);
-                    if (result == DialogResult.Retry)
-                    {
-                        Application.Restart();
-                    }
-                    else
-                        Application.Exit();
+                    ChangeButtonImmage();
                 }
             }
         }
 
+        private void TryKnowWinner(int s)
+        {
+            if (s == 3)
+            {
+                DialogResult result = MessageBox.Show("Черные выйграли. Сыграть заного?", "", MessageBoxButtons.RetryCancel);
+                if (result == DialogResult.Retry)
+                {
+                    Application.Restart();
+                }
+                else
+                    Application.Exit();
+            }
+            else if (s == 4)
+            {
+                DialogResult result = MessageBox.Show("Белые выйграли. Сыграть заного?", "", MessageBoxButtons.RetryCancel);
+                if (result == DialogResult.Retry)
+                {
+                    Application.Restart();
+                }
+                else
+                    Application.Exit();
+            }
+            _isColour = 0;
+        }
+
+        private void ChangeColourW ()
+        {
+            for (int i = 0; i < variants.Count; i++)
+            {
+                if (buttons[variants[i]].BackColor == Color.SaddleBrown)
+                {
+                    buttons[variants[i]].BackColor = Color.Chocolate;
+                }
+                else if (buttons[variants[i]].BackColor == Color.Peru)
+                {
+                    buttons[variants[i]].BackColor = Color.PeachPuff;
+                }
+            }
+        }
+
+        private void ReturnColourW ()
+        {
+            for (int i = 0; i < variants.Count; i++)
+            {
+                if (buttons[variants[i]].BackColor == Color.Chocolate)
+                {
+                    buttons[variants[i]].BackColor = Color.SaddleBrown;
+                }
+                else if (buttons[variants[i]].BackColor == Color.PeachPuff)
+                {
+                    buttons[variants[i]].BackColor = Color.Peru;
+                }
+            }
+        }
+        private void ChangeColourB()
+        {
+            for (int i = 0; i < variants.Count; i++)
+            {
+                int c = 9 - variants[i] / 10;
+                int d = 9 - variants[i] % 10;
+                if (buttons[c * 10 + d].BackColor == Color.SaddleBrown)
+                {
+                    buttons[c * 10 + d].BackColor = Color.Chocolate;
+                }
+                else if (buttons[c * 10 + d].BackColor == Color.Peru)
+                {
+                    buttons[c * 10 + d].BackColor = Color.PeachPuff;
+                }
+            }
+        }
+        private void ReturnColourB()
+        {
+            for (int i = 0; i < variants.Count; i++)
+            {
+                int c = 9 - variants[i] / 10;
+                int d = 9 - variants[i] % 10;
+                if (buttons[c * 10 + d].BackColor == Color.Chocolate)
+                {
+                    buttons[c * 10 + d].BackColor = Color.SaddleBrown;
+                }
+                else if (buttons[c * 10 + d].BackColor == Color.PeachPuff)
+                {
+                    buttons[c * 10 + d].BackColor = Color.Peru;
+                }
+            }
+        }
+        private void ChangeImmage()
+        {
+            for (int i = 1; i < 5; i++)
+                for (int j = 1; j < 9; j++)
+                {
+                    Button button = new Button();
+                    button.BackgroundImage = buttons[i * 10 + j].BackgroundImage;
+                    buttons[i * 10 + j].BackgroundImage = buttons[(9 - i) * 10 + 9 - j].BackgroundImage;
+                    buttons[(9 - i) * 10 + 9 - j].BackgroundImage = button.BackgroundImage;
+                }
+        }
     }
 }

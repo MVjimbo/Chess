@@ -31,8 +31,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button81 = new System.Windows.Forms.Button();
             this.button28 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
             this.button38 = new System.Windows.Forms.Button();
@@ -95,6 +93,8 @@
             this.button44 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button84 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button81 = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -115,7 +115,6 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.button11, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.button81, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.button28, 8, 7);
             this.tableLayoutPanel1.Controls.Add(this.button17, 7, 8);
@@ -179,6 +178,7 @@
             this.tableLayoutPanel1.Controls.Add(this.button44, 4, 5);
             this.tableLayoutPanel1.Controls.Add(this.button18, 8, 8);
             this.tableLayoutPanel1.Controls.Add(this.button84, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.button11, 1, 8);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -196,36 +196,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(753, 654);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // button11
-            // 
-            this.button11.BackColor = System.Drawing.Color.SaddleBrown;
-            this.button11.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button11.BackgroundImage")));
-            this.button11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button11.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button11.ForeColor = System.Drawing.SystemColors.Control;
-            this.button11.Location = new System.Drawing.Point(176, 477);
-            this.button11.Margin = new System.Windows.Forms.Padding(0);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(50, 50);
-            this.button11.TabIndex = 64;
-            this.button11.UseVisualStyleBackColor = false;
-            this.button11.Click += new System.EventHandler(this.button_Click);
-            // 
-            // button81
-            // 
-            this.button81.BackColor = System.Drawing.Color.Peru;
-            this.button81.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button81.BackgroundImage")));
-            this.button81.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button81.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button81.Location = new System.Drawing.Point(176, 127);
-            this.button81.Margin = new System.Windows.Forms.Padding(0);
-            this.button81.Name = "button81";
-            this.button81.Size = new System.Drawing.Size(50, 50);
-            this.button81.TabIndex = 0;
-            this.button81.UseVisualStyleBackColor = false;
-            this.button81.Click += new System.EventHandler(this.button_Click);
             // 
             // button28
             // 
@@ -1068,6 +1038,36 @@
             this.button84.TabIndex = 38;
             this.button84.UseVisualStyleBackColor = false;
             this.button84.Click += new System.EventHandler(this.button_Click);
+            // 
+            // button11
+            // 
+            this.button11.BackColor = System.Drawing.Color.SaddleBrown;
+            this.button11.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button11.BackgroundImage")));
+            this.button11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button11.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button11.ForeColor = System.Drawing.SystemColors.Control;
+            this.button11.Location = new System.Drawing.Point(176, 477);
+            this.button11.Margin = new System.Windows.Forms.Padding(0);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(50, 50);
+            this.button11.TabIndex = 64;
+            this.button11.UseVisualStyleBackColor = false;
+            this.button11.Click += new System.EventHandler(this.button_Click);
+            // 
+            // button81
+            // 
+            this.button81.BackColor = System.Drawing.Color.Peru;
+            this.button81.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button81.BackgroundImage")));
+            this.button81.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button81.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button81.Location = new System.Drawing.Point(176, 127);
+            this.button81.Margin = new System.Windows.Forms.Padding(0);
+            this.button81.Name = "button81";
+            this.button81.Size = new System.Drawing.Size(50, 50);
+            this.button81.TabIndex = 0;
+            this.button81.UseVisualStyleBackColor = false;
+            this.button81.Click += new System.EventHandler(this.button_Click);
             // 
             // flowLayoutPanel1
             // 

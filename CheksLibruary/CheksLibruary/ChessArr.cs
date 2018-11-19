@@ -10,15 +10,17 @@ namespace CheksLibruary
     {
         Dictionary<int, Chess> black;
         Dictionary<int, Chess> white;
-        bool colornow;
+        Dictionary<int, Dictionary<int, Chess>> Pole;
+        int colornow;
 
 
         public ChessArr()
         {
-            colornow = false;//0-белые,1-черные
+            colornow = 0;//0-белые,1-черные
             Chess chess;
             black = new Dictionary<int, Chess>();
             white = new Dictionary<int, Chess>();
+            Pole = new Dictionary<int, Dictionary<int, Chess>>();
             //Расставляем пешки
             for (int i = 1; i < 9; i++)
             {
@@ -61,6 +63,8 @@ namespace CheksLibruary
             black.Add(chess.ReturnPozition(), chess);
             chess = new King(8, 5);
             black.Add(chess.ReturnPozition(), chess);
+            Pole.Add(1, black);
+            Pole.Add(0, white);
         }
 
 
@@ -70,7 +74,7 @@ namespace CheksLibruary
         {
             Chess help = new Help();
             int _poz = help.ReturnPozition(a, b);//Позиция выбранной фигуры
-            if (colornow==true)//Ход черных
+            if (colornow==1)//Ход черных
             {
                 if (!black.ContainsKey(_poz))//Если выбранное не содержится в черном
                 {
@@ -87,20 +91,7 @@ namespace CheksLibruary
                     switch (_type)
                     {
                         case 1://Выбрали пешку
-                            list.Remove((a + 1) * 10 + b);
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if ((white.ContainsKey(list[i])) || (black.ContainsKey(list[i])))//Для собратьев белых
-                                {
-                                    list.RemoveAt(i--);
-                                }
-                            }
-                            if (a == 7)
-                                list.Add((a -2) * 10 + b);
-                            if (white.ContainsKey((a-1)*10+b+1))
-                                list.Add((a - 1) * 10 + b + 1);
-                            if (white.ContainsKey((a - 1) * 10 + b -1))
-                                list.Add((a - 1) * 10 + b -1);
+                            Pawn(ref list, a, b);
                             break;
                         case 2://Выбрали ладью
                             for (int i = 0; i < list.Count; i++)
@@ -500,20 +491,7 @@ namespace CheksLibruary
                     switch (_type)
                     {
                         case 1://Выбрали пешку
-                            list.Remove((a - 1) * 10 + b);
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if ((white.ContainsKey(list[i])) || (black.ContainsKey(list[i])))//Для собратьев белых
-                                {
-                                    list.RemoveAt(i--);
-                                }
-                            }
-                            if (a == 2)
-                                list.Add((a + 2) * 10 + b);
-                            if (black.ContainsKey((a + 1) * 10 + b + 1))
-                                list.Add((a + 1) * 10 + b + 1);
-                            if (black.ContainsKey((a + 1) * 10 + b - 1))
-                                list.Add((a + 1) * 10 + b - 1);
+                            Pawn(ref list, a, b);
                             break;
                         case 2://Выбрали ладью
                             for (int i = 0; i < list.Count; i++)
@@ -896,19 +874,18 @@ namespace CheksLibruary
             }
         }
        
-        public void ChangePozition(int a,int b,int c,int d,out int sost)
+        public void ChangePozition(int a,int b,int c,int d,ref int sost)
         {
             Chess help = new Help();
             int _poz1 = help.ReturnPozition(a, b);
             int _poz2 = help.ReturnPozition(c,d);
-            if (colornow==true)//ход черных
+            if (colornow==1)//ход черных
             {
                 Chess chess = black[_poz1];
                 chess.ChangeReturnPozition(c, d);
                 black.Remove(_poz1);
                 black.Add(_poz2, chess);
-                colornow = false;
-                sost = 0;
+                colornow = 0;
                 if (white.ContainsKey(_poz2))
                 {
                     if (white[_poz2].Type==6)
@@ -928,8 +905,7 @@ namespace CheksLibruary
                 chess.ChangeReturnPozition(c, d);
                 white.Remove(_poz1);
                 white.Add(_poz2, chess);
-                colornow = true;
-                sost = 1;
+                colornow = 1;
                 if (black.ContainsKey(_poz2))
                 {
                     if (black[_poz2].Type == 6)
@@ -942,6 +918,49 @@ namespace CheksLibruary
                         sost = 4;
                 }
             }
+        }
+
+
+        private void Pawn(ref List<int> list,int a,int b)
+        {
+            if ((colornow == 1) && (a == 7)) 
+                list.Add((a -2) * 10 + b);
+             else if ((colornow == 0) && (a == 2)) 
+                list.Add((a + 2) * 10 + b);
+            for (int i = 0; i < list.Count; i++)
+                {
+                    if ((white.ContainsKey(list[i])) || (black.ContainsKey(list[i])))//Для собратьев белых
+                    {
+                        list.RemoveAt(i--);
+                    }
+                }
+            if (colornow == 1)
+            {
+                list.Remove((a + 1) * 10 + b);
+                if (a == 7)
+                    list.Add((a - 2) * 10 + b);
+                if (white.ContainsKey((a - 1) * 10 + b + 1))
+                    list.Add((a - 1) * 10 + b + 1);
+                if (white.ContainsKey((a - 1) * 10 + b - 1))
+                    list.Add((a - 1) * 10 + b - 1);
+            }
+            else
+            {
+                list.Remove((a - 1) * 10 + b);
+                if (a == 2)
+                    list.Add((a + 2) * 10 + b);
+                if (black.ContainsKey((a + 1) * 10 + b + 1))
+                    list.Add((a + 1) * 10 + b + 1);
+                if (black.ContainsKey((a + 1) * 10 + b - 1))
+                    list.Add((a + 1) * 10 + b - 1);
+            }
+        }
+
+        private int Abs(int a)
+        {
+            if (a < 0)
+                return -a;
+            return a;
         }
     }
 }
