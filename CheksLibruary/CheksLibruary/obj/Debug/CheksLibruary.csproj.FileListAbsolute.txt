@@ -10,3 +10,9 @@ C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csprojReso
 C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csproj.CoreCompileInputs.cache
 C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.dll
 C:\C#\RealProject\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.pdb
+C:\C#\GitProject\GGProgect\CheksLibruary\CheksLibruary\bin\Debug\CheksLibruary.dll
+C:\C#\GitProject\GGProgect\CheksLibruary\CheksLibruary\bin\Debug\CheksLibruary.pdb
+C:\C#\GitProject\GGProgect\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csprojResolveAssemblyReference.cache
+C:\C#\GitProject\GGProgect\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.csproj.CoreCompileInputs.cache
+C:\C#\GitProject\GGProgect\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.dll
+C:\C#\GitProject\GGProgect\CheksLibruary\CheksLibruary\obj\Debug\CheksLibruary.pdb

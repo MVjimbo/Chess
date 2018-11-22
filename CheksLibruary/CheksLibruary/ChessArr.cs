@@ -11,6 +11,8 @@ namespace CheksLibruary
         Dictionary<int, Chess> black;
         Dictionary<int, Chess> white;
         Dictionary<int, Dictionary<int, Chess>> Pole;
+        private  delegate void ThreeElemEvent(ref List<int> list, int x, int y);
+        Dictionary<int, ThreeElemEvent> AllEvents;
         int colornow;
 
 
@@ -65,6 +67,15 @@ namespace CheksLibruary
             black.Add(chess.ReturnPozition(), chess);
             Pole.Add(1, black);
             Pole.Add(0, white);
+            AllEvents = new Dictionary<int, ThreeElemEvent>
+            {
+                {1,this.Pawn },
+                {2,this.Rook },
+                {3,this.Horse  },
+                {4,this.Elephant },
+                {5,this.Queen },
+                {6,this.King },
+            };
         }
 
 
@@ -74,804 +85,21 @@ namespace CheksLibruary
         {
             Chess help = new Help();
             int _poz = help.ReturnPozition(a, b);//Позиция выбранной фигуры
-            if (colornow==1)//Ход черных
-            {
-                if (!black.ContainsKey(_poz))//Если выбранное не содержится в черном
+            if (!Pole[colornow].ContainsKey(_poz))//Если выбранное не содержится в том цвете
                 {
                     var list = new List<int>();
                     list = null;
                     return list;
                 }
-                else
+            else
                 {
-                    Chess chess = black[_poz];
+                    Chess chess = Pole[colornow][_poz];
                     var list = new List<int>();
                     list = chess.FindPozitions();
-                    int _type = chess.Type;
-                    switch (_type)
-                    {
-                        case 1://Выбрали пешку
-                            Pawn(ref list, a, b);
-                            break;
-                        case 2://Выбрали ладью
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (black.ContainsKey(list[i]))//Для собратьев черных,list[i]
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n == b))//Верх
-                                    {
-                                        while (m < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        while (m > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        while (n < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        while (n > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                }
-                                else if (white.ContainsKey(list[i]))//Для врагов белых
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n == b))//Верх
-                                    {
-                                        m++;
-                                        while (m < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        m--;
-                                        while (m > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                        }
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        n++;
-                                        while (n < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        n--;
-                                        while (n > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 3://Конь
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (black.ContainsKey(list[i]))//Для собратьев черных,list[i]
-                                {
-                                    list.RemoveAt(i--);
-                                }
-                            }
-                            break;
-                        case 4://Cлон
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (black.ContainsKey(list[i]))//Для собратьев черных,list[i]
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                }
-                                else if (white.ContainsKey(list[i]))//Для врагов белых
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        m++;
-                                        n++;
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        m--;
-                                        n--;
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                            n--;
-                                        }
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        n--;
-                                        m++;
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        n++;
-                                        m--;
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                            m--;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 5://Ферзь
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (black.ContainsKey(list[i]))//Для собратьев черных,list[i]
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m > a) && (n == b))//Верх
-                                    {
-                                        while (m < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        while (m > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        while (n < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        while (n > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                }
-                                else if (white.ContainsKey(list[i]))//Для врагов белых
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        m++;
-                                        n++;
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        m--;
-                                        n--;
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                            n--;
-                                        }
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        n--;
-                                        m++;
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        n++;
-                                        m--;
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                            m--;
-                                        }
-                                    }
-                                    else if ((m > a) && (n == b))//Верх
-                                    {
-                                        m++;
-                                        while (m < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        m--;
-                                        while (m > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                        }
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        n++;
-                                        while (n < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        n--;
-                                        while (n > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 6://Король
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (black.ContainsKey(list[i]))//Для собратьев черных,list[i]
-                                {
-                                    list.RemoveAt(i--);
-                                }
-                            }
-                            break;
-
-
-                    }
+                    AllEvents[chess.Type](ref list,a,b);
                     return list;
                 }
-            }
-            else // Белые ходят
-            {
-                if (!white.ContainsKey(_poz))//Если выбранное не содержится в белом
-                {
-                    var list = new List<int>();
-                    list = null;
-                    return list;
-                }
-                else
-                {
-                    Chess chess = white[_poz];
-                    var list = new List<int>();
-                    list = chess.FindPozitions();
-                    int _type = chess.Type;
-                    switch (_type)
-                    {
-                        case 1://Выбрали пешку
-                            Pawn(ref list, a, b);
-                            break;
-                        case 2://Выбрали ладью
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (white.ContainsKey(list[i]))//Для собратьев белых,list[i]
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n == b))//Верх
-                                    {
-                                        while (m < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        while (m > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        while (n < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        while (n > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                }
-                                else if (black.ContainsKey(list[i]))//Для врагов черных
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n == b))//Верх
-                                    {
-                                        m++;
-                                        while (m < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        m--;
-                                        while (m > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                        }
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        n++;
-                                        while (n < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        n--;
-                                        while (n > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 3://Конь
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (white.ContainsKey(list[i]))//Для собратьев белых,list[i]
-                                {
-                                    list.RemoveAt(i--);
-                                }
-                            }
-                            break;
-                        case 4://Cлон
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (white.ContainsKey(list[i]))//Для собратьев белых,list[i]
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                }
-                                else if (black.ContainsKey(list[i]))//Для врагов черных
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        m++;
-                                        n++;
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        m--;
-                                        n--;
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                            n--;
-                                        }
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        n--;
-                                        m++;
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        n++;
-                                        m--;
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                            m--;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 5://Ферзь
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (white.ContainsKey(list[i]))//Для собратьев белых,list[i]
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m > a) && (n == b))//Верх
-                                    {
-                                        while (m < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            m++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        while (m > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            m--;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        while (n < 9)
-                                        {
-                                            list.RemoveAt(i);
-                                            n++;
-                                        }
-                                        i--;
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        while (n > 0)
-                                        {
-                                            list.RemoveAt(i);
-                                            n--;
-                                        }
-                                        i--;
-                                    }
-                                }
-                                else if (black.ContainsKey(list[i]))//Для врагов черных
-                                {
-                                    int m = list[i] / 10;
-                                    int n = list[i] % 10;
-                                    if ((m > a) && (n > b))//Вверхний правый угол
-                                    {
-                                        m++;
-                                        n++;
-                                        while ((m < 9) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n < b))//Левый нижний угол
-                                    {
-                                        m--;
-                                        n--;
-                                        while ((m > 0) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                            n--;
-                                        }
-                                    }
-                                    else if ((m > a) && (n < b))//Левый верхний угол
-                                    {
-                                        n--;
-                                        m++;
-                                        while ((m < 9) && (n > 0))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n > b))//Правый нижний угол
-                                    {
-                                        n++;
-                                        m--;
-                                        while ((m > 0) && (n < 9))
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                            m--;
-                                        }
-                                    }
-                                    else if ((m > a) && (n == b))//Верх
-                                    {
-                                        m++;
-                                        while (m < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m++;
-                                        }
-                                    }
-                                    else if ((m < a) && (n == b))
-                                    {
-                                        m--;
-                                        while (m > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            m--;
-                                        }
-                                    }
-                                    else if ((m == a) && (n > b))
-                                    {
-                                        n++;
-                                        while (n < 9)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n++;
-                                        }
-                                    }
-                                    else if ((m == a) && (n < b))
-                                    {
-                                        n--;
-                                        while (n > 0)
-                                        {
-                                            list.Remove(m * 10 + n);
-                                            n--;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 6://Король
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if (white.ContainsKey(list[i]))//Для собратьев белых,list[i]
-                                {
-                                    list.RemoveAt(i--);
-                                }
-                            }
-                            break;
-                    }
-                    return list;
-                }
-            }
+        
         }
        
         public void ChangePozition(int a,int b,int c,int d,ref int sost)
@@ -953,6 +181,390 @@ namespace CheksLibruary
                     list.Add((a + 1) * 10 + b + 1);
                 if (black.ContainsKey((a + 1) * 10 + b - 1))
                     list.Add((a + 1) * 10 + b - 1);
+            }
+        }
+
+        private void Rook (ref List<int> list,int a,int b)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (Pole[colornow].ContainsKey(list[i]))
+                {
+                    int m = list[i] / 10;
+                    int n = list[i] % 10;
+                    if ((m > a) && (n == b))//Верх
+                    {
+                        while (m < 9)
+                        {
+                            list.RemoveAt(i);
+                            m++;
+                        }
+                        i--;
+                    }
+                    else if ((m < a) && (n == b))
+                    {
+                        while (m > 0)
+                        {
+                            list.RemoveAt(i);
+                            m--;
+                        }
+                        i--;
+                    }
+                    else if ((m == a) && (n > b))
+                    {
+                        while (n < 9)
+                        {
+                            list.RemoveAt(i);
+                            n++;
+                        }
+                        i--;
+                    }
+                    else if ((m == a) && (n < b))
+                    {
+                        while (n > 0)
+                        {
+                            list.RemoveAt(i);
+                            n--;
+                        }
+                        i--;
+                    }
+                }
+                else if (Pole[Abs(colornow-1)].ContainsKey(list[i]))
+                {
+                    int m = list[i] / 10;
+                    int n = list[i] % 10;
+                    if ((m > a) && (n == b))//Верх
+                    {
+                        m++;
+                        while (m < 9)
+                        {
+                            list.Remove(m * 10 + n);
+                            m++;
+                        }
+                    }
+                    else if ((m < a) && (n == b))
+                    {
+                        m--;
+                        while (m > 0)
+                        {
+                            list.Remove(m * 10 + n);
+                            m--;
+                        }
+                    }
+                    else if ((m == a) && (n > b))
+                    {
+                        n++;
+                        while (n < 9)
+                        {
+                            list.Remove(m * 10 + n);
+                            n++;
+                        }
+                    }
+                    else if ((m == a) && (n < b))
+                    {
+                        n--;
+                        while (n > 0)
+                        {
+                            list.Remove(m * 10 + n);
+                            n--;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Horse (ref List<int> list,int a,int b)
+        {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (Pole[colornow].ContainsKey(list[i]))
+                    {
+                        list.RemoveAt(i--);
+                    }
+                }
+        }
+
+        private void Elephant(ref List<int> list,int a,int b)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (Pole[colornow].ContainsKey(list[i]))//Для собратьев белых,list[i]
+                {
+                    int m = list[i] / 10;
+                    int n = list[i] % 10;
+                    if ((m > a) && (n > b))//Вверхний правый угол
+                    {
+                        while ((m < 9) && (n < 9))
+                        {
+                            list.RemoveAt(i);
+                            m++;
+                            n++;
+                        }
+                        i--;
+                    }
+                    else if ((m < a) && (n < b))//Левый нижний угол
+                    {
+                        while ((m > 0) && (n > 0))
+                        {
+                            list.RemoveAt(i);
+                            m--;
+                            n--;
+                        }
+                        i--;
+                    }
+                    else if ((m > a) && (n < b))//Левый верхний угол
+                    {
+                        while ((m < 9) && (n > 0))
+                        {
+                            list.RemoveAt(i);
+                            n--;
+                            m++;
+                        }
+                        i--;
+                    }
+                    else if ((m < a) && (n > b))//Правый нижний угол
+                    {
+                        while ((m > 0) && (n < 9))
+                        {
+                            list.RemoveAt(i);
+                            n++;
+                            m--;
+                        }
+                        i--;
+                    }
+                }
+                else if (Pole[Abs(colornow-1)].ContainsKey(list[i]))//Для врагов черных
+                {
+                    int m = list[i] / 10;
+                    int n = list[i] % 10;
+                    if ((m > a) && (n > b))//Вверхний правый угол
+                    {
+                        m++;
+                        n++;
+                        while ((m < 9) && (n < 9))
+                        {
+                            list.Remove(m * 10 + n);
+                            m++;
+                            n++;
+                        }
+                    }
+                    else if ((m < a) && (n < b))//Левый нижний угол
+                    {
+                        m--;
+                        n--;
+                        while ((m > 0) && (n > 0))
+                        {
+                            list.Remove(m * 10 + n);
+                            m--;
+                            n--;
+                        }
+                    }
+                    else if ((m > a) && (n < b))//Левый верхний угол
+                    {
+                        n--;
+                        m++;
+                        while ((m < 9) && (n > 0))
+                        {
+                            list.Remove(m * 10 + n);
+                            n--;
+                            m++;
+                        }
+                    }
+                    else if ((m < a) && (n > b))//Правый нижний угол
+                    {
+                        n++;
+                        m--;
+                        while ((m > 0) && (n < 9))
+                        {
+                            list.Remove(m * 10 + n);
+                            n++;
+                            m--;
+                        }
+                    }
+                }
+            }
+        }
+        private void Queen (ref List<int> list,int a,int b)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (Pole[colornow].ContainsKey(list[i]))
+                {
+                    int m = list[i] / 10;
+                    int n = list[i] % 10;
+                    if ((m > a) && (n > b))//Вверхний правый угол
+                    {
+                        while ((m < 9) && (n < 9))
+                        {
+                            list.RemoveAt(i);
+                            m++;
+                            n++;
+                        }
+                        i--;
+                    }
+                    else if ((m < a) && (n < b))//Левый нижний угол
+                    {
+                        while ((m > 0) && (n > 0))
+                        {
+                            list.RemoveAt(i);
+                            m--;
+                            n--;
+                        }
+                        i--;
+                    }
+                    else if ((m > a) && (n < b))//Левый верхний угол
+                    {
+                        while ((m < 9) && (n > 0))
+                        {
+                            list.RemoveAt(i);
+                            n--;
+                            m++;
+                        }
+                        i--;
+                    }
+                    else if ((m < a) && (n > b))//Правый нижний угол
+                    {
+                        while ((m > 0) && (n < 9))
+                        {
+                            list.RemoveAt(i);
+                            n++;
+                            m--;
+                        }
+                        i--;
+                    }
+                    else if ((m > a) && (n == b))//Верх
+                    {
+                        while (m < 9)
+                        {
+                            list.RemoveAt(i);
+                            m++;
+                        }
+                        i--;
+                    }
+                    else if ((m < a) && (n == b))
+                    {
+                        while (m > 0)
+                        {
+                            list.RemoveAt(i);
+                            m--;
+                        }
+                        i--;
+                    }
+                    else if ((m == a) && (n > b))
+                    {
+                        while (n < 9)
+                        {
+                            list.RemoveAt(i);
+                            n++;
+                        }
+                        i--;
+                    }
+                    else if ((m == a) && (n < b))
+                    {
+                        while (n > 0)
+                        {
+                            list.RemoveAt(i);
+                            n--;
+                        }
+                        i--;
+                    }
+                }
+                else if (Pole[Abs(colornow-1)].ContainsKey(list[i]))
+                {
+                    int m = list[i] / 10;
+                    int n = list[i] % 10;
+                    if ((m > a) && (n > b))//Вверхний правый угол
+                    {
+                        m++;
+                        n++;
+                        while ((m < 9) && (n < 9))
+                        {
+                            list.Remove(m * 10 + n);
+                            m++;
+                            n++;
+                        }
+                    }
+                    else if ((m < a) && (n < b))//Левый нижний угол
+                    {
+                        m--;
+                        n--;
+                        while ((m > 0) && (n > 0))
+                        {
+                            list.Remove(m * 10 + n);
+                            m--;
+                            n--;
+                        }
+                    }
+                    else if ((m > a) && (n < b))//Левый верхний угол
+                    {
+                        n--;
+                        m++;
+                        while ((m < 9) && (n > 0))
+                        {
+                            list.Remove(m * 10 + n);
+                            n--;
+                            m++;
+                        }
+                    }
+                    else if ((m < a) && (n > b))//Правый нижний угол
+                    {
+                        n++;
+                        m--;
+                        while ((m > 0) && (n < 9))
+                        {
+                            list.Remove(m * 10 + n);
+                            n++;
+                            m--;
+                        }
+                    }
+                    else if ((m > a) && (n == b))//Верх
+                    {
+                        m++;
+                        while (m < 9)
+                        {
+                            list.Remove(m * 10 + n);
+                            m++;
+                        }
+                    }
+                    else if ((m < a) && (n == b))
+                    {
+                        m--;
+                        while (m > 0)
+                        {
+                            list.Remove(m * 10 + n);
+                            m--;
+                        }
+                    }
+                    else if ((m == a) && (n > b))
+                    {
+                        n++;
+                        while (n < 9)
+                        {
+                            list.Remove(m * 10 + n);
+                            n++;
+                        }
+                    }
+                    else if ((m == a) && (n < b))
+                    {
+                        n--;
+                        while (n > 0)
+                        {
+                            list.Remove(m * 10 + n);
+                            n--;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void King(ref List<int> list,int a,int b)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (Pole[colornow].ContainsKey(list[i]))
+                {
+                    list.RemoveAt(i--);
+                }
             }
         }
 

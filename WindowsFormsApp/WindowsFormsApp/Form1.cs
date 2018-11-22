@@ -410,5 +410,10 @@ namespace WindowsFormsApp
                     buttons[(9 - i) * 10 + 9 - j].BackgroundImage = button.BackgroundImage;
                 }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
