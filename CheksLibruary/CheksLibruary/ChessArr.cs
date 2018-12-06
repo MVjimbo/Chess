@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CheksLibruary
 {
@@ -15,6 +16,105 @@ namespace CheksLibruary
         Dictionary<int, ThreeElemEvent> AllEvents;
         int colornow;
 
+        public ChessArr(int a)
+        {
+            Chess chess;
+            black = new Dictionary<int, Chess>();
+            white = new Dictionary<int, Chess>();
+            Pole = new Dictionary<int, Dictionary<int, Chess>>();
+            FileStream fstream = new FileStream("Save.txt", FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(fstream);
+            string s = reader.ReadLine();
+            colornow= Convert.ToInt32(s);
+            s = reader.ReadLine();
+            while (s!="q")
+            {
+                char c = s[0];
+                int _type = Convert.ToInt32(c)-48;
+                int stpoint= 2;
+                int pozitionX = Convert.ToInt32(s[stpoint++])-48;
+                int pozitionY = Convert.ToInt32(s[stpoint])-48;
+                switch (_type)
+                {
+                    case 1:
+                        chess = new Pawn(pozitionX, pozitionY);
+                        white.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 2:
+                        chess = new Rook(pozitionX, pozitionY);
+                        white.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 3:
+                        chess = new Horse(pozitionX, pozitionY);
+                        white.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 4:
+                        chess = new Elephant(pozitionX, pozitionY);
+                        white.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 5:
+                        chess = new Queen(pozitionX, pozitionY);
+                        white.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 6:
+                        chess = new King(pozitionX, pozitionY);
+                        white.Add(chess.ReturnPozition(), chess);
+                        break;
+                }
+                s = reader.ReadLine();
+
+            }
+            s = reader.ReadLine();
+            while (s != "q")
+            {
+                char c = s[0];
+                int _type = Convert.ToInt32(c)-48;
+                int stpoint = 2;
+                int pozitionX = Convert.ToInt32(s[stpoint++])-48;
+                int pozitionY = Convert.ToInt32(s[stpoint])-48;
+                switch (_type)
+                {
+                    case 1:
+                        chess = new Pawn(pozitionX, pozitionY);
+                        black.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 2:
+                        chess = new Rook(pozitionX, pozitionY);
+                        black.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 3:
+                        chess = new Horse(pozitionX, pozitionY);
+                        black.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 4:
+                        chess = new Elephant(pozitionX, pozitionY);
+                        black.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 5:
+                        chess = new Queen(pozitionX, pozitionY);
+                        black.Add(chess.ReturnPozition(), chess);
+                        break;
+                    case 6:
+                        chess = new King(pozitionX, pozitionY);
+                        black.Add(chess.ReturnPozition(), chess);
+                        break;
+                }
+                s = reader.ReadLine();
+            }
+            reader.Close();
+            fstream.Close();
+            Pole.Add(1, black);
+            Pole.Add(0, white);
+            AllEvents = new Dictionary<int, ThreeElemEvent>
+            {
+                {1,this.Pawn },
+                {2,this.Rook },
+                {3,this.Horse  },
+                {4,this.Elephant },
+                {5,this.Queen },
+                {6,this.King },
+            };
+        }
 
         public ChessArr()
         {
@@ -77,7 +177,6 @@ namespace CheksLibruary
                 {6,this.King },
             };
         }
-
 
 
         //Получение информации о возможных вариантах
@@ -573,6 +672,27 @@ namespace CheksLibruary
             if (a < 0)
                 return -a;
             return a;
+        }
+
+        public void Save ()
+        {
+            FileStream fstream = new FileStream("Save.txt", FileMode.Create, FileAccess.Write); ;
+            StreamWriter writer = new StreamWriter(fstream);
+            writer.WriteLine(colornow);
+            foreach (var v in white)
+                writer.WriteLine($"{v.Value.Type} {v.Value.ReturnPozition()}");
+            writer.WriteLine("q");
+            foreach (var v in black)
+                writer.WriteLine($"{v.Value.Type} {v.Value.ReturnPozition()}");
+            writer.WriteLine("q");
+            writer.Close();
+            
+             fstream.Close();
+        }
+
+        public void NewGame()
+        {
+            File.Delete("Save.txt");
         }
     }
 }

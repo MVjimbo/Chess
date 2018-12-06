@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CheksLibruary;
+using System.IO;
 
 namespace WindowsFormsApp
 {
@@ -31,19 +32,166 @@ namespace WindowsFormsApp
 
         public Form1()
         {
-            InitializeComponent();
             _isCliced = false;
             variants = new List<int>();
             buttons = new Dictionary<int, Button>();
             number = new Dictionary<Button, int>();
-            _isColour = 0;
             ChangeColourWhite += ChangeColourW;
             ReturnColourWhite += ReturnColourW;
             ChangeColourBlack += ChangeColourB;
             ReturnColourBlack += ReturnColourB;
             ChangeButtonImmage += ChangeImmage;
             GiveRezult += TryKnowWinner;
-            chessArr = new ChessArr();
+            string s;
+            FileInfo finfo = new FileInfo("Save.txt");
+            if (!finfo.Exists)
+            {
+                InitializeComponent();
+                InitializeButNum();
+                chessArr = new ChessArr();
+                _isColour = 0;
+            }
+            else
+            {
+                InitializeComponent1();
+                InitializeButNum();
+                chessArr = new ChessArr(1);
+                FileStream fstream = new FileStream("Save.txt", FileMode.Open, FileAccess.Read);
+                StreamReader reader = new StreamReader(fstream);
+                s = reader.ReadLine();
+                _isColour = Convert.ToInt32(s);
+                s = reader.ReadLine();
+                if (_isColour == 0)
+                {
+                    while (s != "q")
+                    {
+                        char c = s[0];
+                        int _type = Convert.ToInt32(c) - 48;
+                        int stpoint = 2;
+                        int pozition = (Convert.ToInt32(s[stpoint]) - 48) * 10 + Convert.ToInt32(s[stpoint + 1]) - 48;
+                        switch (_type)
+                        {
+                            case 1:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_1;
+                                break;
+                            case 2:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_2;
+                                break;
+                            case 3:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_3_1;
+                                break;
+                            case 4:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_4;
+                                break;
+                            case 5:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_5;
+                                break;
+                            case 6:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_6;
+                                break;
+                        }
+                        s = reader.ReadLine();
+                    }
+                    s = reader.ReadLine();
+                    while (s != "q")
+                    {
+                        char c = s[0];
+                        int _type = Convert.ToInt32(c) - 48;
+                        int stpoint = 2;
+                        int pozition = (Convert.ToInt32(s[stpoint]) - 48) * 10 + Convert.ToInt32(s[stpoint + 1]) - 48;
+                        switch (_type)
+                        {
+                            case 1:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_1;
+                                break;
+                            case 2:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_2;
+                                break;
+                            case 3:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_3;
+                                break;
+                            case 4:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_4;
+                                break;
+                            case 5:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_5;
+                                break;
+                            case 6:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_6;
+                                break;
+                        }
+                        s = reader.ReadLine();
+                    }
+                }
+                else
+                {
+                    while (s != "q")
+                    {
+                        char c = s[0];
+                        int _type = Convert.ToInt32(c) - 48;
+                        int stpoint = 2;
+                        int pozition = (9-(Convert.ToInt32(s[stpoint]) - 48)) * 10 + 9-(Convert.ToInt32(s[stpoint + 1]) - 48);
+                        switch (_type)
+                        {
+                            case 1:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_1;
+                                break;
+                            case 2:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_2;
+                                break;
+                            case 3:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_3_1;
+                                break;
+                            case 4:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_4;
+                                break;
+                            case 5:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_5;
+                                break;
+                            case 6:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._1_6;
+                                break;
+                        }
+                        s = reader.ReadLine();
+                    }
+                    s = reader.ReadLine();
+                    while (s != "q")
+                    {
+                        char c = s[0];
+                        int _type = Convert.ToInt32(c) - 48;
+                        int stpoint = 2;
+                        int pozition = (9 - (Convert.ToInt32(s[stpoint]) - 48)) * 10 + 9 - (Convert.ToInt32(s[stpoint + 1]) - 48);
+                        switch (_type)
+                        {
+                            case 1:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_1;
+                                break;
+                            case 2:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_2;
+                                break;
+                            case 3:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_3;
+                                break;
+                            case 4:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_4;
+                                break;
+                            case 5:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_5;
+                                break;
+                            case 6:
+                                buttons[pozition].BackgroundImage = global::WindowsFormsApp.Properties.Resources._2_6;
+                                break;
+                        }
+                        s = reader.ReadLine();
+                    }
+                }
+                reader.Close();
+                fstream.Close();
+            }
+        }
+
+        private void InitializeButNum()
+        {
             buttons.Add(11, button11);
             buttons.Add(12, button12);
             buttons.Add(13, button13);
@@ -187,11 +335,6 @@ namespace WindowsFormsApp
             number.Add(button86, 86);
             number.Add(button87, 87);
             number.Add(button88, 88);
-        }
-
-        private void Form1_GiveRezult(int s)
-        {
-            throw new NotImplementedException();
         }
 
         private void button_Click(object sender, EventArgs e)
@@ -413,7 +556,13 @@ namespace WindowsFormsApp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            chessArr.Save();
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            chessArr.NewGame();
+            Application.Restart();
         }
     }
 }
